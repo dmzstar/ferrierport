@@ -8,8 +8,8 @@ public class IndexController {
 	
 	@GetMapping("/admin")
 	public String index() {
-		System.out.println("===========AdminIndexController");
-		return "index";
+		System.out.println("===========AdminIndexControllersssss");
+		return "admin/index";
 	}
 
 }
