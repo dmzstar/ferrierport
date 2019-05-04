@@ -15,16 +15,26 @@
             <tr>
                 <th>Id</th>
                 <th>用户名</th>
+                <th>操作</th>
             </tr>
         </thead>
-        <tfoot>
-            <tr>
-                <th>Id</th>
-                <th>用户名</th>
-            </tr>
-        </tfoot>
 		
 	</table>
+	
+	<div id="dlg"></div>
+	<button id="btn-show" type="button">Show</button>
+	
+
+	<script type="text/javascript" th:src="@{/assets/oop/underscore-min.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/oop/backbone-min.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/oop/mustache.min.js}"></script>
+	
+	<link rel="stylesheet" th:href="@{/primeui-4.1.15/themes/bootstrap/theme.css}" />
+	<link rel="stylesheet" th:href="@{/jquery-ui-1.11.4/jquery-ui.css}" />
+	<link rel="stylesheet" th:href="@{/primeui-4.1.15/primeui.min.css}" />
+	<script type="text/javascript" th:src="@{/jquery-ui-1.11.4/jquery-ui.js}"></script>
+	<script type="text/javascript" th:src="@{/primeui-4.1.15/primeui.min.js}"></script>
+	<script type="text/javascript" th:src="@{/primeui-4.1.15/primeelements.min.js}"></script>	
 
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" />
 	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
@@ -32,13 +42,75 @@
 
 	<script>
 		$(document).ready(function() {
+						
 			$('#exampleDataTable').dataTable({
 		        "processing": true,
 		        "serverSide": true,
+		        "columnDefs": [
+		            {
+		                "targets": [ 2 ],
+		                "data" : null,
+		                "render" : function(data, type,row) { 
+		                	return $('#exampleDataTableRowCommonColumn').html();
+		                }
+		 
+		            }
+		        ],
 		        "ajax": "/admin/api/secs"
 			});
+			
+			var columnView = Backbone.View.extend({
+				  el: '#exampleDataTableRowCommonColumn'
+			});	
+			
+			
+			
+			$('#dlg').puidialog({
+		        showEffect: 'fade',
+		        hideEffect: 'fade',
+		        minimizable: true,
+		        maximizable: true,
+		        responsive: true,
+		        minWidth: 200,
+		        modal: true,
+		        buttons: [{
+		                text: 'Yes',
+		                icon: 'fa-check',
+		                click: function() {
+		                    $('#dlg').puidialog('hide');
+		                }
+		            },
+		            {
+		                text: 'No',
+		                icon: 'fa-close',
+		                click: function() {
+		                    $('#dlg').puidialog('hide');
+		                }
+		            }
+		        ]
+		    });
+			
+			$('#btn-show').puibutton({
+		        icon: 'fa-external-link-square',
+		        click: function() {
+		            $('#dlg').puidialog('show');
+		        }
+		    });
+			
+			
 		});
-	</script> 
+		
+		
+	</script>
+	
+	 
+	
+	<script type="type=text/template" id="exampleDataTableRowCommonColumn">
+		<a href="">编辑</a>
+			
+		<a href="">删除</a>
+	</script>
+	
 	</content>
 </body>
 </html>

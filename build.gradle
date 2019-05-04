@@ -37,7 +37,8 @@ dependencies {
 	
 	
 	// https://mvnrepository.com/artifact/org.webjars/jquery
-	compile group: 'org.webjars', name: 'jquery', version: '3.4.0'	
+	//compile group: 'org.webjars', name: 'jquery', version: '3.4.0'
+	compile group: 'org.webjars', name: 'jquery', version: '2.2.1'	
 	// https://mvnrepository.com/artifact/org.webjars/bootstrap
 	compile group: 'org.webjars', name: 'bootstrap', version: '3.4.1'
 	// https://mvnrepository.com/artifact/org.webjars/AdminLTE
