@@ -1,10 +1,16 @@
 package com.weifan.ferrier.springboot.config;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,6 +26,8 @@ public class MvcConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
+	
+	
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {

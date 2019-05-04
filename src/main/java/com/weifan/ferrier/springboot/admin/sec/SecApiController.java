@@ -1,13 +1,17 @@
 package com.weifan.ferrier.springboot.admin.sec;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,6 +57,21 @@ public class SecApiController {
 			}
 		});
 		
+	}
+	
+	@GetMapping("/user/{id}")
+	@ResponseBody
+	public Object get(@PathVariable Long id) {
+		var userOpt = userRepository.findById(id);
+		if(userOpt.isPresent()) {
+			var user = userOpt.get();
+			var map = new HashMap<>();
+			map.put("id", user.getId());
+			map.put("username", user.getUsername());
+			return map;
+		}else {
+			return new HashMap<>();
+		}
 	}
 	
 	@Data
