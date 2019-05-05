@@ -29,23 +29,24 @@
 				<span>1</span>
 			</div>
 			<div class="form-group">
-				<label for="exampleInputEmail1">用户名</label> <input type="email"
-					class="form-control" id="exampleInputEmail1" placeholder="Email" value="{{username}}">
+				<label for="exampleInputEmail1">用户名</label> 
+				<input type="text"
+					class="form-control" id="exampleInputEmail1" placeholder="Email" value="{{username}}"
+					minlength="1" required>
 			</div>
 			<div class="form-group">
-				<label for="exampleInputPassword1">密码</label> <input type="password"
+				<label for="exampleInputPassword1">密码</label> 
+				<input type="password"
 					class="form-control" id="exampleInputPassword1"
-					placeholder="Password">
+					placeholder="Password" minlength="0" maxlength="20">
 			</div>
-			<button type="submit" class="btn btn-default">Submit</button>
+			<input type="submit" value="保存" class="btn btn-default"/>
 		</form>
 
 	</div>
-	<button id="btn-show" type="button">Show</button>
 
-	<script type="text/javascript"
-		th:src="@{/assets/oop/underscore-min.js}"></script> <script
-		type="text/javascript" th:src="@{/assets/oop/backbone-min.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/oop/underscore-min.js}"></script> 
+	<script type="text/javascript" th:src="@{/assets/oop/backbone-min.js}"></script>
 	<script type="text/javascript" th:src="@{/assets/oop/mustache.min.js}"></script>
 
 	<link rel="stylesheet"
@@ -58,6 +59,8 @@
 	<script type="text/javascript" th:src="@{/x-tag/x-tag-core.min.js}"></script>
 	<script type="text/javascript"
 		th:src="@{/primeui-4.1.15/primeelements.min.js}"></script>
+		
+	<script type="text/javascript" th:src="@{/jquery-validation-1.19.0/dist/jquery.validate.min.js}"></script>	
 
 	<link rel="stylesheet"
 		href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" />
@@ -68,7 +71,32 @@
 
 	<script>
 		$(document).ready(function() {
-
+			
+			var User = Backbone.Model.extend({
+				urlRoot : '/admin/api/secs/user'
+			});
+			
+			var u = new User({
+				id: '1'
+			});
+			
+			var UserList = Backbone.Collection.extend({
+				model: User,
+				loadByRaw : function(datas){
+					let list = [];
+					for(let d of datas){
+						var v = {
+							'id' : d[0],
+							'username' : d[1]
+						};
+						list.push(v);
+					}
+					this.models = list;
+				}
+			});
+			
+			var userList = new UserList();
+			
 			var $datatable = $('#exampleDataTable').dataTable({
 				"processing" : true,
 				"serverSide" : true,
@@ -76,30 +104,45 @@
 					"targets" : [ 2 ],
 					"data" : null,
 					"render" : function(data, type, row) {
+						console.log('render');
+						//console.log(data,type,row);
 						return $('#exampleDataTableRowCommonColumn').html();
 					}
 				} ],
-				"ajax" : "/admin/api/secs"
-			});			
-			
-			$datatable.delegate(".selEditCommand","click",function(){
-				
-				$('#dlg').puidialog('show');
+				ajax: {
+			        url: '/admin/api/secs',
+			        dataFilter: function(data){
+			        	console.log('dataFilter:::',data);
+			        	let jsdata = JSON.parse(data);
+			        	userList.loadByRaw(jsdata.data);
+			            return data;
+			        }
+				}
 			});
 			
+			//$datatable.draw();
 			
+			$datatable.delegate(".selEditCommand","click",function(){
+				$('#dlg').puidialog('show');
+			});
 
-			var columnView = Backbone.View.extend({
+			var ColumnView = Backbone.View.extend({
 				el : '#exampleDataTableRowCommonColumn'
 			});
 			
 			var userData = null;
+			var selectedUserId = null;
 
 			var UserEditView = Backbone.View.extend({
 				el : '#dlg',
 				render: function() {
 					var html = Mustache.render(this.$el.find('form').html(),userData);
 				    this.$el.find('form').html(html);
+				    this.$el.find('form').validate({
+				    	submitHandler: function(form) {
+				    		form.submit();
+				    	}
+				    });
 				    return this;
 				 }
 			});
@@ -116,7 +159,7 @@
 				modal : true,
 				title : '编辑用户',
 				beforeShow : function(){
-					$.get('/admin/api/secs/user/2',function(resp){
+					$.get('/admin/api/secs/user/' + selectedUserId,function(resp){
 						userData = resp;
 						userEditView.render();
 					});

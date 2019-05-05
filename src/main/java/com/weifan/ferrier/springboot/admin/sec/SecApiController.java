@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,20 +34,21 @@ public class SecApiController {
 	
 	@GetMapping("")
 	@ResponseBody
-	public Object index(@RequestParam Integer start,@RequestParam Integer length) {
+	public Object index(@RequestParam Integer start,@RequestParam Integer length,@RequestParam Integer draw) {
 		
 		log.info(start + "");
 		log.info(length + "");
 		
 		if(!userRepository.existsByUsername("aaa")) {
 			userService.create("aaa", "123456", "ROLE_ADMIN");
-			for(int i=0;i<20;i++) {
+			for(int i=0;i<100;i++) {
 				userService.create("admin" + i, "123456", "ROLE_ADMIN");
 			}
 		}
 		
-		var page = userRepository.findAllFetch(PageRequest.of(start, length));
-		return new BoostrapDatatableData<User>(page).rowMap((i,u) -> {
+		var page = userRepository.findAllFetch(PageRequest.of(Math.round(start/length), length));
+		log.info("$$$$$$$$$$$$$$$$" + start + "," + length);
+		return new BoostrapDatatableData<User>(page,draw).rowMap((i,u) -> {
 			switch(i) {
 				case 0 : return u.getId() + "";
 				case 1 : return u.getUsername() + "";
@@ -74,15 +73,21 @@ public class SecApiController {
 		}
 	}
 	
+	/**
+	 * 构造函数draw参数客户端生成并传递，否则表格渲染将出错
+	 * @author dong
+	 * @param <T>
+	 */
 	@Data
 	public static class BoostrapDatatableData<T>{
 		
 		@JsonIgnore
 		private Page<T> page;
 		
-		public BoostrapDatatableData(Page<T> page) {
-			this.recordsTotal = page.getTotalElements() + "";
-			this.recordsFiltered = page.getTotalElements() + "";
+		public BoostrapDatatableData(Page<T> page,int draw) {
+			this.recordsTotal = page.getTotalElements();
+			this.recordsFiltered = page.getTotalElements();
+			this.draw = draw;
 			this.page = page;
 		}
 		
@@ -97,9 +102,9 @@ public class SecApiController {
 			return this;
 		}
 		
-		private String draw = "9";
-		private String recordsTotal = "0";
-		private String recordsFiltered = "0";
+		private Integer draw = 1;
+		private Long recordsTotal = 0l;
+		private Long recordsFiltered = 0l;
 		private List<List<String>> data = new ArrayList<>();
 		
 		public static interface Fun<T>{
