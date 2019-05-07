@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/showcase :: layout(~{::title}, ~{::content})}">
+<head>
+<title>CKEditor</title>
+
+</head>
+<body>
+	<content>
+
+	<div th:if="${message}" th:text="${message}" class="callout callout-success"></div>
+
+
+	<form th:action="@{/showcase/upload/servlet}" method="POST" enctype="multipart/form-data">
+		<div class="box box-primary">
+		<div class="box-header with-border">
+			同步示例
+		</div>
+		<div class="box-body">
+		<div class="form-group">
+			<label for="file">File to upload:</label>
+			<input id="file" type="file" name="file"/>
+		</div>
+		</div>
+		
+		<div class="box-footer">
+			<button class="btn btn-primary">提交</button>
+		</div>
+		
+		</div>
+	
+		<input type="hidden"
+           			th:name="${_csrf.parameterName}"
+           			th:value="${_csrf.token}"/>
+	</form>
+	
+	
+	<form th:action="@{/showcase/upload/servlet}" method="POST" enctype="multipart/form-data">
+		<div class="box box-primary">
+		<div class="box-header with-border">
+			异步示例
+		</div>
+		<div class="box-body">
+		<div class="form-group">
+			<label for="file">File to upload:</label>
+			<input id="file" type="file" name="file"/>
+		</div>
+		</div>
+		
+		<div class="box-footer">
+			<button class="btn btn-primary">提交</button>
+		</div>
+		
+		</div>
+	
+		<input type="hidden"
+           			th:name="${_csrf.parameterName}"
+           			th:value="${_csrf.token}"/>
+	</form>
+
+	</content>
+</body>
+</html>

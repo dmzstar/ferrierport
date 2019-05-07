@@ -74,7 +74,7 @@ public class SecApiController {
 	}
 	
 	/**
-	 * 构造函数draw参数客户端生成并传递，否则表格渲染将出错
+	 * 
 	 * @author dong
 	 * @param <T>
 	 */
@@ -84,6 +84,11 @@ public class SecApiController {
 		@JsonIgnore
 		private Page<T> page;
 		
+		/**
+		 * 
+		 * @param page
+		 * @param draw 构造函数draw参数客户端生成并传递，否则表格渲染出错
+		 */
 		public BoostrapDatatableData(Page<T> page,int draw) {
 			this.recordsTotal = page.getTotalElements();
 			this.recordsFiltered = page.getTotalElements();
@@ -92,13 +97,25 @@ public class SecApiController {
 		}
 		
 		public BoostrapDatatableData<T> rowMap(Fun<T> fun) {
-			page.getContent().forEach((item) -> {
+			var i = 0;
+			for(var item : page.getContent()) {
 				var itemList = new ArrayList<String>();
 				for(int j=0;j<=1;j++) {
 					itemList.add(fun.todo(j,item));
 				}
+				itemList.add("" + (i++));
+				data.add(itemList);
+			}
+			/**
+			page.getContent().forEach((item) -> {
+				var itemList = new ArrayList<String>();
+				for(int j=0;j<=1;j++) {
+					itemList.add("" + (i++));
+					itemList.add(fun.todo(j,item));
+				}
 				data.add(itemList);
 			});
+			*/
 			return this;
 		}
 		

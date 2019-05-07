@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/admin :: layout(~{::title}, ~{::content})}">
+<head>
+<title>权限管理</title>
+
+</head>
+<body>
+	<content>
+
+	<table id="exampleDataTable" class="table table-striped table-bordered"
+		style="width: 100%">
+
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>用户名</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+
+	</table>
+
+	<div id="dlg" style="display: none;">
+
+		<form>
+			<div class="form-group">
+				<label for="exampleInputEmail1">Id</label>
+				<span>1</span>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputEmail1">用户名</label> 
+				<input type="text"
+					class="form-control" id="exampleInputEmail1" placeholder="Email" value="{{username}}"
+					minlength="1" required>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputPassword1">密码</label> 
+				<input type="password"
+					class="form-control" id="exampleInputPassword1"
+					placeholder="Password" minlength="0" maxlength="20">
+			</div>
+			<input type="submit" value="保存" class="btn btn-default"/>
+		</form>
+
+	</div>
+
+	<script type="text/javascript" th:src="@{/assets/oop/underscore-min.js}"></script> 
+	<script type="text/javascript" th:src="@{/assets/oop/backbone-min.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/oop/mustache.min.js}"></script>
+
+	<link rel="stylesheet"
+		th:href="@{/primeui-4.1.15/themes/bootstrap/theme.css}" />
+	<link rel="stylesheet" th:href="@{/jquery-ui-1.11.4/jquery-ui.css}" />
+	<link rel="stylesheet" th:href="@{/primeui-4.1.15/primeui.min.css}" />
+	<script type="text/javascript"
+		th:src="@{/jquery-ui-1.11.4/jquery-ui.js}"></script> <script
+		type="text/javascript" th:src="@{/primeui-4.1.15/primeui.min.js}"></script>
+	<script type="text/javascript" th:src="@{/x-tag/x-tag-core.min.js}"></script>
+	<script type="text/javascript"
+		th:src="@{/primeui-4.1.15/primeelements.min.js}"></script>
+		
+	<script type="text/javascript" th:src="@{/jquery-validation-1.19.0/dist/jquery.validate.min.js}"></script>	
+
+	<link rel="stylesheet"
+		href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" />
+	<script
+		src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script
+		src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+	<script>
+		$(document).ready(function() {
+			
+			var User = Backbone.Model.extend({
+				urlRoot : '/admin/api/secs/user'
+			});
+			
+			var u = new User({
+				id: '1'
+			});
+			
+			var UserList = Backbone.Collection.extend({
+				model: User,
+				loadByRaw : function(datas){
+					let list = [];
+					for(let d of datas){
+						var v = {
+							'id' : d[0],
+							'username' : d[1]
+						};
+						list.push(v);
+					}
+					this.models = list;
+				}
+			});
+			
+			var userList = new UserList();
+			
+			var $datatable = $('#exampleDataTable').dataTable({
+				"processing" : true,
+				"serverSide" : true,
+				"columnDefs" : [ {
+					"targets" : [ 2 ],
+					"data" : null,
+					"render" : function(data, type, row) {
+						console.log('render');
+						//console.log(data,type,row);
+						return $('#exampleDataTableRowCommonColumn').html();
+					}
+				} ],
+				ajax: {
+			        url: '/admin/api/secs',
+			        dataFilter: function(data){
+			        	console.log('dataFilter:::',data);
+			        	let jsdata = JSON.parse(data);
+			        	userList.loadByRaw(jsdata.data);
+			            return data;
+			        }
+				}
+			});
+			
+			//$datatable.draw();
+			
+			$datatable.delegate(".selEditCommand","click",function(){
+				$('#dlg').puidialog('show');
+			});
+
+			var ColumnView = Backbone.View.extend({
+				el : '#exampleDataTableRowCommonColumn'
+			});
+			
+			var userData = null;
+			var selectedUserId = null;
+
+			var UserEditView = Backbone.View.extend({
+				el : '#dlg',
+				render: function() {
+					var html = Mustache.render(this.$el.find('form').html(),userData);
+				    this.$el.find('form').html(html);
+				    this.$el.find('form').validate({
+				    	submitHandler: function(form) {
+				    		form.submit();
+				    	}
+				    });
+				    return this;
+				 }
+			});
+			
+			var userEditView = new UserEditView();
+
+			$('#dlg').puidialog({
+				showEffect : 'fade',
+				hideEffect : 'fade',
+				minimizable : true,
+				maximizable : true,
+				responsive : true,
+				minWidth : 200,
+				modal : true,
+				title : '编辑用户',
+				beforeShow : function(){
+					$.get('/admin/api/secs/user/' + selectedUserId,function(resp){
+						userData = resp;
+						userEditView.render();
+					});
+				}
+			});
+
+			$('#btn-show').puibutton({
+				icon : 'fa-external-link-square',
+				click : function() {
+					$('#dlg').puidialog('show');
+				}
+			});
+
+		});
+	</script> 
+	<script type="type=text/template" id="exampleDataTableRowCommonColumn">
+		<a href="javascript:void(0)" class="selEditCommand">编辑</a>
+			
+		<a href="">删除</a>
+	</script> 
+	</content>
+</body>
+</html>

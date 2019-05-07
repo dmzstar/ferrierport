@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/admin :: layout(~{::title}, ~{::content})}">
+<head>
+<title>CKEditor</title>
+
+</head>
+<body>
+	<content>
+	
+	<div th:if="${message}" th:text="${message}">
+		
+	</div>
+	
+	<form action="/cms/client/editor/save" method="POST" th:object="${article}">
+		<textarea name="editor1" id="editor1" rows="10" cols="80">
+                This is my textarea to be replaced with CKEditor.
+            </textarea>
+            <input type="submit" value="保存">
+            <!--
+            	<input type="hidden"
+           			th:name="${_csrf.parameterName}"
+           			th:value="${_csrf.token}"/>
+           	-->
+        </form>
+
+	<script type="text/javascript" th:src="@{/assets/oop/underscore-min.js}"></script> 
+	<script type="text/javascript" th:src="@{/assets/oop/backbone-min.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/oop/mustache.min.js}"></script>
+	
+	<script src="https://cdn.ckeditor.com/4.11.4/standard/ckeditor.js"></script>
+	
+		<script>
+        	var editor = CKEDITOR.replace( 'editor1' );
+        	console.log(CKEDITOR);
+        	/**
+        	CKEDITOR.ajax.load('/editor/article/1',function(resp){
+        		console.log(resp);
+        	});
+        	*/
+        </script>
+	
+	</content>
+</body>
+</html>

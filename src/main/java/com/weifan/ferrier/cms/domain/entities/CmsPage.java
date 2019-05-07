@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 
 import com.weifan.ferrier.cms.domain.repositories.CmsPageRepository;
 
@@ -15,7 +14,6 @@ import lombok.Data;
 
 @Data
 @Entity
-@Configurable
 public class CmsPage {
 	
 	@Id

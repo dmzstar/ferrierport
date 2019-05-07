@@ -36,9 +36,11 @@ public class HttpSecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		log.info("====================================" + authenticationSuccessHandler);
 		log.info("====================================" + authenticationFailureHandler);
-		
 		http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
 		.anyRequest().permitAll()
+		/**
+		http.authorizeRequests().anyRequest().permitAll()
+		*/
 		.and()
         .formLogin()
         .loginPage("/login")
@@ -54,7 +56,6 @@ public class HttpSecurityConfig extends WebSecurityConfigurerAdapter{
 		.addLogoutHandler(logoutHandler);
 		
 	}
-	
 	
 	@Autowired
 	private UserRepository userRepository;
