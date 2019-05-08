@@ -25,6 +25,7 @@
 
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" style="display:none;">
+										<form>
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -34,9 +35,8 @@
 				</div>
 				<div class="modal-body">
 				
-								<form>
 				<div class="form-group">
-					<label for="exampleInputEmail1">Id</label> <span>1</span>
+					<label for="exampleInputEmail1">Id</label> <span>{{id}}</span>
 				</div>
 				<div class="form-group">
 					<label for="exampleInputEmail1">用户名</label> <input type="text"
@@ -48,18 +48,17 @@
 						type="password" class="form-control" id="exampleInputPassword1"
 						placeholder="Password" minlength="0" maxlength="20">
 				</div>
-				<input type="submit" value="保存" class="btn btn-default" />
-			</form>
 				
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 					</button>
-					<button type="button" class="btn btn-primary">提交更改</button>
+					<button type="button" class="btn btn-primary selSaveCommand">提交更改</button>
 				</div>
 			</div>
 			<!-- /.modal-content -->
 		</div>
+					</form>
 		</div>
 		<!-- /.modal -->
 
@@ -80,7 +79,7 @@
 						type="password" class="form-control" id="exampleInputPassword1"
 						placeholder="Password" minlength="0" maxlength="20">
 				</div>
-				<input type="submit" value="保存" class="btn btn-default" />
+				<input type="submit" value="保存" class="btn btn-default selSaveCommand" />
 			</form>
 
 		</div>
@@ -167,33 +166,36 @@
 			var ColumnView = Backbone.View.extend({
 				el : '#exampleDataTableRowCommonColumn'
 			});
-			
-			var userData = null;
-			var selectedUserId = null;
 
 			var UserEditView = Backbone.View.extend({
 				el : '#myModal',
 				initialize: function() {
+					this.template = this.$el.find('form').html();
 					var view = this;
 				    this.$el.on('show.bs.modal',function(){
 				    	view.render();
 				    });
 				},
 				render: function() {
-					var html = Mustache.render(this.$el.find('form').html(),selectedUser);
+					var html = Mustache.render(this.template,selectedUser.toJSON());
 				    this.$el.find('form').html(html);
 				    this.$el.find('form').validate({
 				    	submitHandler: function(form) {
 				    		form.submit();
 				    	}
 				    });
+				    var view = this;
+				    this.$el.find('.selSaveCommand').on('click',function(){
+				    	selectedUser.save();
+				    });
 				    return this;
 				 },
-				 show : function(){
-					 selectedUser.fetch({},function(resp){
-						 console.log('resp',resp);
-						 $('#myModal').modal('show');
-					 });
+				 show : function(id){
+					 var view = this;
+					 selectedUser.set('id',id);
+					 selectedUser.fetch({success:function(resp){
+						 view.$el.modal('show');
+					 }})
 				 },
 			});
 			
@@ -220,9 +222,8 @@
 			
 			$('#exampleDataTable tbody').on( 'click', '.selEditCommand', function () {
 				var data = $datatable.row($(this).closest('tr')).data();
-			    selectedUser = new User({id:data[0]});
-			    console.log('selectedUser',selectedUser);
-			    userEditView.show();
+			    selectedUser = new User();
+			    userEditView.show(data[0]);
 			} );
 
 		});

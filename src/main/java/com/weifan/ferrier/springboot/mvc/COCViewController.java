@@ -14,6 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/*
+ * 利用SpringMVC现有的,@RequestMapping,@GetMapping,@PostMapping，实现基于约定的页面查找机制
+ */
 public interface COCViewController {
 	
 	default public String cocView() {

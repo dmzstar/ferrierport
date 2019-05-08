@@ -16,13 +16,33 @@ public class Bootstrap4Controllers {
 	@RequestMapping("/showcase/bootstrap4")
 	public static class Index implements COCViewController{
 
-		@GetMapping("/simple-sidebar/starter")
+		@GetMapping("/sidebar/starter")
 		public String sidebar(ModelMap model) {
 			return cocView();
 		}
 		
 		@GetMapping("/blog/starter")
-		public String index(ModelMap model) {
+		public String blog(ModelMap model) {
+			return cocView();
+		}
+		
+		@GetMapping("/admin/starter")
+		public String admin(ModelMap model) {
+			return cocView();
+		}
+		
+		@GetMapping("/admin/starter_tf")
+		public String admin_starter_tf(ModelMap model) {
+			return cocView();
+		}
+		
+		@GetMapping("/shop/index")
+		public String shop(ModelMap model) {
+			return cocView();
+		}
+		
+		@GetMapping("/bare/index")
+		public String bare(ModelMap model) {
 			return cocView();
 		}
 

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Showcase - Vue Lifecycle</title>
+
+<!-- Bootstrap core CSS -->
+<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+	href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.6/build/styles/default.min.css" />
+
+<script
+	src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.6/build/highlight.min.js"></script>
+<script>
+	hljs.initHighlightingOnLoad();
+</script>
+
+</head>
+
+<body>
+
+	<!-- Navigation -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+		<div class="container">
+			<a class="navbar-brand" href="#">Start Bootstrap</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarResponsive" aria-controls="navbarResponsive"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active"><a class="nav-link" href="#">Home
+							<span class="sr-only">(current)</span>
+					</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">About</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Services</a>
+					</li>
+					<li class="nav-item"><a class="nav-link" href="#">Contact</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<div class="lifecycleAll"></div>
+
+
+		<div class="row">
+
+			<p>我们来测试一下Vue2的生命周期方法，下面是官方文档展示的生命周期流程图</p>
+
+		</div>
+
+		<div class="row">
+
+			<img class="img-fluid" src="vendor/img/lifecycle.png" alt="lifecycle"
+				width="400px;">
+
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12 text-left">
+				<h1 class="mt-5">完整的生命周期流程例子</h1>
+				<pre>
+        <code class="javascript">
+		var vm = new Vue({
+			el : '.mainBody',
+			template : "{{name}}",
+			data : {
+				'name' : 'Vue Lifecycle show'
+			},
+			beforeCreate : function() {
+				console.log('beforeCreated:', arguments);
+			},
+			created : function() {
+				console.log('created:', arguments);
+			},
+			beforeMount : function() {
+				console.log('beforeMount:', arguments);
+				console.log('beforeMount方法只有在设置el属性的时候才会调用。');
+			},
+			mounted : function() {
+				console.log('mounted:', arguments);
+				console.log('mounted在mount阶段完成之后调用。');
+			},
+			beforeUpdate : function() {
+				console.log('beforeUpdate:', arguments);
+				console.log('beforeUpdate钩子方法只有在设置了template并且属性值有更改时才会调用。');
+			},
+			updated : function() {
+				console.log('updated:', arguments);
+				console.log('updated在updated阶段完成后调用。');
+			}
+		});
+        </code>
+        </pre>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<h1 class="mt-5">不设置el和template属性</h1>
+				<p class="lead">Complete with pre-defined file paths and
+					responsive navigation!</p>
+				<ul class="list-unstyled">
+					<li>Bootstrap 4.2.1</li>
+					<li>jQuery 3.3.1</li>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="row exampleTemplate">
+			<div class="col-lg-12 text-center">
+				<h1 class="mt-5">A Bootstrap 4 Starter Template</h1>
+				<p class="lead">Complete with pre-defined file paths and
+					responsive navigation!</p>
+				<ul class="list-unstyled">
+					<li>Bootstrap 4.2.1</li>
+					<li>jQuery 3.3.1</li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+
+	<!-- Bootstrap core JavaScript -->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<script>
+	
+		$(function(){
+			return;
+			var vm = new Vue({
+				el : '.lifecycleAll',
+				template : "<div>{{name}}</div>",
+				data : {
+					'name' : 'Vue Lifecycle show all'
+				},
+				beforeCreate : function() {
+					console.log('beforeCreated:', arguments);
+				},
+				created : function() {
+					console.log('created:', arguments);
+				},
+				beforeMount : function() {
+					console.log('beforeMount:方法只有在设置el属性的时候才会调用。');
+					console.log('beforeMount方法只有在设置el属性的时候才会调用。');
+				},
+				mounted : function() {
+					console.log('mounted:', arguments);
+					console.log('mounted在mount阶段完成之后调用。');
+				},
+				beforeUpdate : function() {
+					console.log('beforeUpdate:', arguments);
+					console.log('beforeUpdate钩子方法只有在设置了template并且属性值有更改时才会调用。');
+				},
+				updated : function() {
+					console.log('updated:', arguments);
+					console.log('updated在updated阶段完成后调用。');
+				}
+			});
+		});
+
+		(function(){
+			return;
+			var vm0 = new Vue({
+				beforeCreate : function() {
+					console.log(arguments.callee);
+				},
+				created : function() {
+					console.log(arguments.callee);
+				},
+				beforeMount : function() {
+					console.log(arguments.callee);
+				},
+				mounted : function() {
+					console.log(arguments.callee);
+				},
+				beforeUpdate : function() {
+					console.log(arguments.callee);
+				},
+				updated : function() {
+					console.log(arguments.callee);
+				}
+			});
+		})();
+		
+		(function(){
+			
+			var vm = new Vue({
+				el : '.lifecycleAll',
+				template : '<span>{{name}}</span>',
+				data : {
+					name : 'hello lifecycle'	
+				},
+				beforeCreate : function() {
+					console.log(arguments.callee);
+				},
+				created : function() {
+					console.log(arguments.callee);
+				},
+				beforeMount : function() {
+					console.log(arguments.callee);
+				},
+				mounted : function() {
+					console.log(arguments.callee);
+				},
+				beforeUpdate : function() {
+					console.log(arguments.callee);
+				},
+				updated : function() {
+					console.log(arguments.callee);
+				},
+				beforeDestroy : function(){
+					console.log(arguments.callee);
+				},
+				destroyed : function(){
+					console.log(arguments.callee);
+				}
+			});
+			
+			vm.name = 'hello lifecycle show';
+			vm.$destroy();
+			
+		})();
+		
+		
+		
+	</script>
+
+</body>
+
+</html>

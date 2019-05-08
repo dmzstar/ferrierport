@@ -19,7 +19,8 @@ public class ShowcaseMvcConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/showcase/bootstrap4/**").addResourceLocations("classpath:/templates/showcase/bootstrap4/");
+		//registry.addResourceHandler("/showcase/bootstrap4/**").addResourceLocations("classpath:/templates/showcase/bootstrap4/");
+		registry.addResourceHandler("/showcase/**").addResourceLocations("classpath:/templates/showcase/");
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
 	
