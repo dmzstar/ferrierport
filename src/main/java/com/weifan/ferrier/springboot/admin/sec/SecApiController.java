@@ -48,7 +48,7 @@ public class SecApiController {
 		
 		var page = userRepository.findAllFetch(PageRequest.of(Math.round(start/length), length));
 		log.info("$$$$$$$$$$$$$$$$" + start + "," + length);
-		return new BoostrapDatatableData<User>(page,draw).rowMap((i,u) -> {
+		return new Datatables.ArrayData<User>(page,draw).rowMap((i,u) -> {
 			switch(i) {
 				case 0 : return u.getId() + "";
 				case 1 : return u.getUsername() + "";
@@ -73,61 +73,6 @@ public class SecApiController {
 		}
 	}
 	
-	/**
-	 * 
-	 * @author dong
-	 * @param <T>
-	 */
-	@Data
-	public static class BoostrapDatatableData<T>{
-		
-		@JsonIgnore
-		private Page<T> page;
-		
-		/**
-		 * 
-		 * @param page
-		 * @param draw 构造函数draw参数客户端生成并传递，否则表格渲染出错
-		 */
-		public BoostrapDatatableData(Page<T> page,int draw) {
-			this.recordsTotal = page.getTotalElements();
-			this.recordsFiltered = page.getTotalElements();
-			this.draw = draw;
-			this.page = page;
-		}
-		
-		public BoostrapDatatableData<T> rowMap(Fun<T> fun) {
-			var i = 0;
-			for(var item : page.getContent()) {
-				var itemList = new ArrayList<String>();
-				for(int j=0;j<=1;j++) {
-					itemList.add(fun.todo(j,item));
-				}
-				itemList.add("" + (i++));
-				data.add(itemList);
-			}
-			/**
-			page.getContent().forEach((item) -> {
-				var itemList = new ArrayList<String>();
-				for(int j=0;j<=1;j++) {
-					itemList.add("" + (i++));
-					itemList.add(fun.todo(j,item));
-				}
-				data.add(itemList);
-			});
-			*/
-			return this;
-		}
-		
-		private Integer draw = 1;
-		private Long recordsTotal = 0l;
-		private Long recordsFiltered = 0l;
-		private List<List<String>> data = new ArrayList<>();
-		
-		public static interface Fun<T>{
-			public String todo(int index,T t);
-		}
-		
-	}
+
 
 }

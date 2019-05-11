@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
@@ -49,7 +48,7 @@ public class SecurityTests {
 	}
 
 	@Test
-	public void contextLoads() throws Exception {
+	public void testAll() throws Exception {
 		
 		/**
 		exceptThrow().assertMsg(CoreMatchers::is,"username.error.blank")
@@ -63,10 +62,6 @@ public class SecurityTests {
 			return c.getConstraintViolations().iterator().next().getMessage();
 		})
 		.exec(() -> userService.create("", "123456zdm"));
-		
-		if(true) {
-			return;
-		}
 
 		// 不能重复创建角色
 		try {
@@ -102,7 +97,7 @@ public class SecurityTests {
 			assertThat(t.getMessage(), is("role.error.notfound"));
 		}
 		
-		//不能添加不存在的角色
+		//不能新增不存在的角色
 		throwIs("user.error.notfound",() -> userService.addRole("noneexistUser", "ROLE_ADMIN"));
 		
 		throwIs(RuntimeException.class,"user.error.notfound",() -> userService.addRole("noneexistUser", "ROLE_ADMIN"));
@@ -112,7 +107,7 @@ public class SecurityTests {
 				,() -> userService.addRole("noneexistUser", "ROLE_ADMIN"));
 		
 		
-		// mvc.perform(get("/admin")).andExpect(authenticated());
+		//mvc.perform(get("/admin")).andExpect(authenticated());
 
 		// mvc.perform(get("/admin")).andExpect(unauthenticated());
 
